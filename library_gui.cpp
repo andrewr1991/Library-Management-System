@@ -10,9 +10,17 @@
 #include <FL/Fl_Return_Button.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Menu_Bar.H>
 
 using namespace std;
 
+//Menu Bar Widgets
+Fl_Window *win;
+Fl_Menu_Bar *menubar;
+
+//Menu Bar Callbacks
+void quitCB(Fl_Widget* w, void* p) { win->hide(); }
+		
 class Patron {
   private:
     string name;
@@ -412,6 +420,39 @@ void cancel_checkin(Fl_Widget* w, void* p) {
 	chkin_dlg->hide();
 }
 
+int newPublicationCB(Fl_Widget* w, void* p) { 
+	pub_dlg = new Publication_Dialog{};
+	pub_dlg->show();
+	return Fl::run();
+}	
+void listAllPublicationsCB(Fl_Widget* w, void* p) { cout << cout << "List All..." << endl; }
+void checkOutCB(Fl_Widget* w, void* p) { cout << cout << "Check Out..." << endl; }
+void checkInCB(Fl_Widget* w, void* p) { cout << cout << "Check In..." << endl; }
+void addPatronCB(Fl_Widget* w, void* p) { cout << cout << "New..." << endl; }
+void listAllPatronsCB(Fl_Widget* w, void* p) { cout << cout << "List All.." << endl; }
+void helpCB(Fl_Widget* w, void* p) { cout << cout << "Help..." << endl; }
+
+//Menu
+Fl_Menu_Item menuitems[] = {
+	{ "&File", 0, 0, 0, FL_SUBMENU },
+		{ "&Quit", FL_ALT + 'q', (Fl_Callback *)quitCB },
+		{ 0 },
+	{ "&Publication", 0, 0, 0, FL_SUBMENU },
+		{ "&New", FL_ALT + 'n', (Fl_Callback *)newPublicationCB },
+		{ "&List All", FL_ALT + 'l', (Fl_Callback *)listAllPublicationsCB },
+		{ "&Check Out", FL_ALT + 'o', (Fl_Callback *)checkOutCB },
+		{ "&Check In", FL_ALT + 'i', (Fl_Callback *)checkInCB },
+		{ 0 },
+	{ "&Patron", 0, 0, 0, FL_SUBMENU },
+		{ "&New", FL_ALT + 'n', (Fl_Callback *)addPatronCB },
+		{ "&List All", FL_ALT + 'l', (Fl_Callback *)listAllPatronsCB },
+		{ 0 },
+	{ "&Help", 0, 0, 0, FL_SUBMENU },
+		{ "&Help", FL_ALT + 'h', (Fl_Callback *)helpCB },
+		{ 0 },
+	{ 0 }
+};
+
 int execute_cmd(string cmd) {
     if (cmd == "0") {
         exit(1);
@@ -493,7 +534,7 @@ int execute_cmd(string cmd) {
       	fl_message(msg.c_str());
     }
 }
-
+/*
 int show_menu() {
 string command;
 
@@ -528,7 +569,54 @@ while (true) {
 	execute_cmd(command);
 	}
 }
-
+*/
 int main() {
-show_menu();
+//show_menu();
+
+const int x = 600;
+const int y = 350;
+
+win = new Fl_Window{ x, y, "Library Management System" };
+win->color(FL_WHITE);
+
+menubar = new Fl_Menu_Bar(0, 0, x, 30);
+menubar->menu(menuitems);
+
+win->end();
+win->show();
+return(Fl::run());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
